@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract Erc20
 {
-    uint  private SupplyValue;
+    uint  private SupplyValue = 100;
     string public Symbol;
     string  public name;
 
@@ -22,7 +22,7 @@ contract Erc20
     event Transfer(address indexed _from, address indexed _to, uint _value);
     event Approval(address indexed _owner, address indexed _spender, uint _value);
 
-    function MintCoin(uint _value) public  returns(bool)
+    function Mint(uint _value) public  returns(bool)
     {
         SupplyValue += _value;
         _balance[msg.sender] += _value;
@@ -30,11 +30,16 @@ contract Erc20
         return true;
     }
 
-    function BurnCoin(uint _value) public returns(bool)
+    function Burn(uint _value) public returns(bool)
     {
         SupplyValue -= _value;
 
         return true;
+    }
+
+    function Decimals() public pure returns(uint)
+    {
+        return 18;
     }
 
    function totalSupply() public view returns (uint)
@@ -45,7 +50,7 @@ contract Erc20
 
    function balanceOf(address _owner) public view returns (uint)
    {
-       return address(_owner).balance;
+       return _balance[_owner];
    } 
 
 
@@ -61,7 +66,6 @@ contract Erc20
    function transferFrom(address _from, address _to, uint _value) public returns (bool success)
    {
        require(_balance[_from] >= _value,"Insufficient funds");
-       require(_balance[msg.sender] != _balance[_from]  && _balance[msg.sender] != _balance[_to],"You are not allowed");
        _balance[_from] -= _value;
 
        _balance[_to] += _value;
